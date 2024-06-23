@@ -1,0 +1,67 @@
+import re
+
+def password_strength(password):
+    # Criteria weights
+    length_weight = 1.5
+    upper_weight = 1.0
+    lower_weight = 1.0
+    digit_weight = 1.0
+    special_weight = 1.5
+
+    # Criteria checks
+    length_criteria = len(password) >= 8
+    upper_criteria = bool(re.search(r'[A-Z]', password))
+    lower_criteria = bool(re.search(r'[a-z]', password))
+    digit_criteria = bool(re.search(r'[0-9]', password))
+    special_criteria = bool(re.search(r'[\W_]', password))
+
+    # Calculate the score
+    score = 0
+    if length_criteria:
+        score += length_weight
+    if upper_criteria:
+        score += upper_weight
+    if lower_criteria:
+        score += lower_weight
+    if digit_criteria:
+        score += digit_weight
+    if special_criteria:
+        score += special_weight
+
+    # Determine strength
+    if score >= 6.0:
+        strength = "Very Strong"
+    elif score >= 5.0:
+        strength = "Strong"
+    elif score >= 4.0:
+        strength = "Moderate"
+    elif score >= 2.0:
+        strength = "Weak"
+    else:
+        strength = "Very Weak"
+
+    # Feedback to user
+    feedback = []
+    if not length_criteria:
+        feedback.append("Password should be at least 8 characters long.")
+    if not upper_criteria:
+        feedback.append("Password should include at least one uppercase letter.")
+    if not lower_criteria:
+        feedback.append("Password should include at least one lowercase letter.")
+    if not digit_criteria:
+        feedback.append("Password should include at least one digit.")
+    if not special_criteria:
+        feedback.append("Password should include at least one special character.")
+    
+    if not feedback:
+        feedback.append("Your password is strong.")
+
+    return strength, feedback
+
+# Example usage
+password = input("Enter your password: ")
+strength, feedback = password_strength(password)
+print(f"Password Strength: {strength}")
+print("Feedback:")
+for comment in feedback:
+    print(f"- {comment}")
